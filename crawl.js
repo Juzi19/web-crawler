@@ -1,4 +1,5 @@
 const {JSDOM} = require('jsdom')
+const puppeteer = require('puppeteer')
 
 async function crawlPage(baseURL, currentURL, pages){
     console.log(`actively crawling ${currentURL}`);
@@ -18,25 +19,33 @@ async function crawlPage(baseURL, currentURL, pages){
     pages[normalizedCurrentURL] = 1;
 
     try{
-        const res = await fetch(currentURL);
-        if(res.status>399){
-            console.log(`Error when fetching with status code: ${res.status}`)
-            return pages
+        //launching puppeteer
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        const res = await page.goto(currentURL, { waitUntil: "networkidle2" }); 
+        const htmlBody = await page.content();
+
+        if(res.status()>399){
+            console.log(`Error when fetching with status code: ${res.status()}`);
+            return pages;
         }
-        const contentType = res.headers.get('content-type')
+        const headers = res.headers();
+        const contentType = headers["content-type"] || "";
         if(!contentType.includes("text/html")){
-            console.log("No html response.Instead: ", contentType)
-            return pages
+            console.log("No html response.Instead: ", contentType);
+            return pages;
         }
-        const htmlBody = await res.text();
-        const nextURLs = getURLsFromHTML(htmlBody, baseURL)
+        //ends puppeteer session
+        await browser.close();
+        const nextURLs = getURLsFromHTML(htmlBody, baseURL);
 
         //recursive crawling
         for (const nextURL of nextURLs){
-            pages = await crawlPage(baseURL, nextURL, pages)
+            pages = await crawlPage(baseURL, nextURL, pages);
         }
     }catch(err){
-        console.log(`Error when fetching ${currentURL}. Exit with Error: ${err}`)
+        console.log(`Error when fetching ${currentURL}. Exit with Error: ${err}`);
     }
     return pages
     
