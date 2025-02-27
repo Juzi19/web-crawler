@@ -24,6 +24,7 @@ function printReport(pages){
 }
 
 function printContactData(pages){
+    const contact_links = []
     for(let page of Object.entries(pages)){
         let url = page[0]
 
@@ -32,12 +33,26 @@ function printContactData(pages){
             url.startsWith("tel:") || 
             url.includes("linkedin.com") || 
             url.includes("xing.com") || 
+            url.includes("instagram.com") || 
+            url.includes("facebook.com") || 
+            url.includes("youtube.com") || 
+            url.includes("x.com") || 
             url.includes("github.com") || 
-            /contact|kontakt|impressum|about|team/i.test(url) // Sucht nach typischen Kontaktseiten
+            /contact|kontakt|impressum|about|team/i.test(url) // checks for typical contact pages
         ) {
-            console.log("Kontakt-Link gefunden:", url);
+            if(url.startsWith("mailto:")){
+                console.log("Email link found:", url.slice(0,7))
+            }
+            else if(url.startsWith("tel:")){
+                console.log("Phone link found:", url.slice(0,4))
+            }
+            else{
+                console.log("Contact link found:", url);
+            }
+            contact_links.push(url);
         }
     }
+    return contact_links;
 }
 
 module.exports = {
