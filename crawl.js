@@ -6,12 +6,16 @@ async function crawlPage(baseURL, currentURL, pages, content){
 
     const baseURLObj = new URL(baseURL);
     const currentURLObj = new URL(currentURL);
-    //only crawling our own page
-    if(baseURLObj.hostname!=currentURLObj.hostname){
+
+    const normalizedCurrentURL = normalizeURL(currentURL)
+
+    //only crawling our own page, looking also for contact links
+    if(baseURLObj.hostname!=currentURLObj.hostname || currentURL.startsWith("tel:")||currentURL.startsWith("mailto:")){
+        //optional, relevant for contact info crawling
+        pages[normalizedCurrentURL]++
         return [pages, content]
     }
 
-    const normalizedCurrentURL = normalizeURL(currentURL)
     //prevents endless iterations
     if(pages[normalizedCurrentURL]>0){
         pages[normalizedCurrentURL]++;
@@ -60,6 +64,10 @@ async function crawlPage(baseURL, currentURL, pages, content){
 }
 
 function normalizeURL(urlString){
+    //prevents email and tel links from getting cleaned
+    if(urlString.startsWith("tel:")||urlString.startsWith("mailto:")){
+        return urlString
+    }
     const urlObj = new URL(urlString);
     const hostpath = `${urlObj.hostname}${urlObj.pathname}`
     if(hostpath.length>0 && hostpath.slice(-1)=='/'){

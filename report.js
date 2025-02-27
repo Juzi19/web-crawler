@@ -10,7 +10,7 @@ function sortPages(pages){
 
 function printReport(pages){
     console.log("=========")
-    console.log("REPORT")
+    console.log("LINKS")
     console.log("=========")
     const sortedPages = sortPages(pages)
     for (const sp of sortedPages){
@@ -19,12 +19,29 @@ function printReport(pages){
         console.log(`Found ${hits} links to page${url}`)
     }
     console.log("=========")
-    console.log("END")
+    console.log("LINKS END")
     console.log("=========")
-    
+}
+
+function printContactData(pages){
+    for(let page of Object.entries(pages)){
+        let url = page[0]
+
+        if (
+            url.startsWith("mailto:") || 
+            url.startsWith("tel:") || 
+            url.includes("linkedin.com") || 
+            url.includes("xing.com") || 
+            url.includes("github.com") || 
+            /contact|kontakt|impressum|about|team/i.test(url) // Sucht nach typischen Kontaktseiten
+        ) {
+            console.log("Kontakt-Link gefunden:", url);
+        }
+    }
 }
 
 module.exports = {
     printReport,
-    sortPages
+    sortPages,
+    printContactData
 }
