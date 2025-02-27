@@ -1,19 +1,21 @@
 const {JSDOM} = require('jsdom')
 const puppeteer = require('puppeteer')
 
-async function crawlPage(baseURL, currentURL, pages){
+async function crawlPage(baseURL, currentURL, pages, content){
     console.log(`actively crawling ${currentURL}`);
 
     const baseURLObj = new URL(baseURL);
     const currentURLObj = new URL(currentURL);
+    //only crawling our own page
     if(baseURLObj.hostname!=currentURLObj.hostname){
-        return pages
+        return [pages, content]
     }
 
     const normalizedCurrentURL = normalizeURL(currentURL)
+    //prevents endless iterations
     if(pages[normalizedCurrentURL]>0){
         pages[normalizedCurrentURL]++;
-        return pages
+        return [pages, content]
     }
 
     pages[normalizedCurrentURL] = 1;
@@ -27,17 +29,19 @@ async function crawlPage(baseURL, currentURL, pages){
 
         if(res.status()>399){
             console.log(`Error when fetching with status code: ${res.status()}`);
-            return pages;
+            return [pages, content];
         }
         const headers = res.headers();
         const contentType = headers["content-type"] || "";
         if(!contentType.includes("text/html")){
             console.log("No html response.Instead: ", contentType);
-            return pages;
+            return [pages, content];
         }
         //crawls actual content
         const htmlBody = await page.content();
         //the html body can be used to feed a LLM to create a summary
+        const new_content = extract_text(htmlBody);
+        content.push([currentURL, new_content])
 
 
         //ends puppeteer session
@@ -46,12 +50,12 @@ async function crawlPage(baseURL, currentURL, pages){
 
         //recursive crawling
         for (const nextURL of nextURLs){
-            pages = await crawlPage(baseURL, nextURL, pages);
+            [pages, content] = await crawlPage(baseURL, nextURL, pages, content);
         }
     }catch(err){
         console.log(`Error when fetching ${currentURL}. Exit with Error: ${err}`);
     }
-    return pages
+    return [pages, content]
     
 }
 
@@ -99,9 +103,11 @@ function extract_text(htmlBody){
         "text": [],
         "headlines": [],
         "title": [],
-        "lists": []
+        "lists": [],
+        "links": []
     }
     const dom = new JSDOM(htmlBody)
+    const links = dom.window.document.querySelectorAll('a');
     const textelements = dom.window.document.querySelectorAll('p, small, span, blockquote, code, pre');
     const headlines = dom.window.document.querySelectorAll('h1, h2, h3, h4, h5, h6');
     const lists = dom.window.document.querySelectorAll('ul, ol');
@@ -109,16 +115,19 @@ function extract_text(htmlBody){
 
     //extracting inner value and adding it to the content object
     for(e of textelements){
-        content["text"].push(e.innerHTML);
+        content["text"].push(e.innerText);
     }
     for(e of headlines){
-        content["headlines"].push(e.innerHTML);
+        content["headlines"].push(e.innerText);
     }
     for(e of lists){
-        content["lists"].push(e.innerHTML);
+        content["lists"].push(e.innerText);
     }
     for(e of title){
         content["title"].push(e.innerHTML);
+    }
+    for(e of links){
+        content["links"].push([e.innerHTML, e.href]);
     }
     return content    
 }
