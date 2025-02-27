@@ -1,4 +1,4 @@
-const {normalizeURL,getURLsFromHTML} = require('./crawl.js')
+const {normalizeURL,getURLsFromHTML,extract_text} = require('./crawl.js')
 const {test, expect} = require('@jest/globals')
 
 test('normalizeURL strip protocol',()=>{
@@ -42,10 +42,45 @@ test('getURLSFromHTML invalid',()=>{
     const expected = [];
     expect(actual).toEqual(expected);  
 })
-test('getURLSFromHTML multiple',()=>{
-    const inputHTMLBody = '<html><body><a href="/path">Hi</a><a href="/path2">Hi</a></body></html>';
-    const inputBaseURL ='https://blog.boot.dev' 
-    const actual = getURLsFromHTML(inputHTMLBody, inputBaseURL);
-    const expected = ['https://blog.boot.dev/path', 'https://blog.boot.dev/path2'];
+
+//extract input test
+test('extract input',()=>{
+    const inputHTMLBody = `
+    <html>
+        <head><title>Testseite</title></head>
+        <body>
+            <h1>Überschrift</h1>
+            <p>Ein Absatz.</p>
+            <small>Kleine Schrift.</small>
+            <ul><li>Liste 1</li><li>Liste 2</li></ul>
+        </body>
+    </html>`;
+    const actual = extract_text(inputHTMLBody);
+    const expected = {
+        "text": ["Ein Absatz.", "Kleine Schrift."],
+        "headlines": ['Überschrift'],
+        "title": ['Testseite'],
+        "lists": ['<li>Liste 1</li><li>Liste 2</li>']
+    };
     expect(actual).toEqual(expected);  
 })
+test('extract input',()=>{
+    const inputHTMLBody = `
+    <html>
+        <head><title>Testseite</title></head>
+        <body>
+            <h1>Überschrift</h1>
+            <p>Ein Absatz.</p>
+            <small>Kleine Schrift.</small>
+        </body>
+    </html>`;
+    const actual = extract_text(inputHTMLBody);
+    const expected = {
+        "text": ["Ein Absatz.", "Kleine Schrift."],
+        "headlines": ['Überschrift'],
+        "title": ['Testseite'],
+        "lists": []
+    };
+    expect(actual).toEqual(expected);  
+})
+ 

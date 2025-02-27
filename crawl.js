@@ -24,7 +24,6 @@ async function crawlPage(baseURL, currentURL, pages){
         const page = await browser.newPage();
 
         const res = await page.goto(currentURL, { waitUntil: "networkidle2" }); 
-        const htmlBody = await page.content();
 
         if(res.status()>399){
             console.log(`Error when fetching with status code: ${res.status()}`);
@@ -36,6 +35,11 @@ async function crawlPage(baseURL, currentURL, pages){
             console.log("No html response.Instead: ", contentType);
             return pages;
         }
+        //crawls actual content
+        const htmlBody = await page.content();
+        //the html body can be used to feed a LLM to create a summary
+
+
         //ends puppeteer session
         await browser.close();
         const nextURLs = getURLsFromHTML(htmlBody, baseURL);
@@ -90,8 +94,38 @@ function getURLsFromHTML(htmlBody, baseURL){
     return urls
 }
 
+function extract_text(htmlBody){
+    const content = {
+        "text": [],
+        "headlines": [],
+        "title": [],
+        "lists": []
+    }
+    const dom = new JSDOM(htmlBody)
+    const textelements = dom.window.document.querySelectorAll('p, small, span, blockquote, code, pre');
+    const headlines = dom.window.document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    const lists = dom.window.document.querySelectorAll('ul, ol');
+    const title = dom.window.document.querySelectorAll('title');
+
+    //extracting inner value and adding it to the content object
+    for(e of textelements){
+        content["text"].push(e.innerHTML);
+    }
+    for(e of headlines){
+        content["headlines"].push(e.innerHTML);
+    }
+    for(e of lists){
+        content["lists"].push(e.innerHTML);
+    }
+    for(e of title){
+        content["title"].push(e.innerHTML);
+    }
+    return content    
+}
+
 module.exports = {
     normalizeURL,
     getURLsFromHTML,
-    crawlPage
+    crawlPage,
+    extract_text
 }
