@@ -1,7 +1,16 @@
 const {JSDOM} = require('jsdom')
 const puppeteer = require('puppeteer')
 
+const max_crawled_pages = 1000;
+let crawled_pages = 0;
+
 async function crawlPage(baseURL, currentURL, pages, content){
+    //prevents from crawling too many pages
+    if(crawled_pages > max_crawled_pages){
+        console.log("Maximum number of pages reached - your website is really large")
+        return [pages, content]
+    }
+
     console.log(`actively crawling ${currentURL}`);
 
     const baseURLObj = new URL(baseURL);
@@ -47,6 +56,8 @@ async function crawlPage(baseURL, currentURL, pages, content){
         const new_content = extract_text(htmlBody);
         content.push([currentURL, new_content])
 
+        //saves number of crawled pages to prevent from infinite loops
+        crawled_pages++;
 
         //ends puppeteer session
         await browser.close();

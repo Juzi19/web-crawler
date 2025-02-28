@@ -37,17 +37,22 @@ function printContactData(pages){
             url.includes("facebook.com") || 
             url.includes("youtube.com") || 
             url.includes("x.com") || 
+            url.includes("tiktok.com") || 
             url.includes("github.com") || 
-            /contact|kontakt|impressum|about|team/i.test(url) // checks for typical contact pages
+            /contact|kontakt|legals|über-uns|ueber-uns|überuns|information|impressum|about|team/i.test(url) // checks for typical contact pages
         ) {
             if(url.startsWith("mailto:")){
-                console.log("Email link found:", url.slice(0,7))
+                console.log("Email found:", url.slice(7))
             }
             else if(url.startsWith("tel:")){
-                console.log("Phone link found:", url.slice(0,4))
+                console.log("Phone number found:", url.slice(4))
             }
             else{
-                console.log("Contact link found:", url);
+                url = url.replace(/([^:]\/)\/+/g, "$1")
+                if(!url.startsWith('www')){
+                    url = `www.${url}`;
+                }
+                console.log("Contact link found:", `${url}`);
             }
             contact_links.push(url);
         }
