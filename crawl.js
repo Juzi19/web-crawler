@@ -1,7 +1,8 @@
-const {JSDOM} = require('jsdom')
-const puppeteer = require('puppeteer')
+const {JSDOM} = require('jsdom');
+const puppeteer = require('puppeteer');
 
-const max_crawled_pages = 1000;
+//max 100 pages to prevent from infinite crawling
+const max_crawled_pages = 100;
 let crawled_pages = 0;
 
 async function crawlPage(baseURL, currentURL, pages, content){
