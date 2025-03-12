@@ -60,7 +60,8 @@ test('extract input',()=>{
         "text": ["Ein Absatz.", "Kleine Schrift."],
         "headlines": ['Überschrift'],
         "title": ['Testseite'],
-        "lists": ['<li>Liste 1</li><li>Liste 2</li>']
+        "lists": ['<li>Liste 1</li><li>Liste 2</li>'],
+        "links": []
     };
     expect(actual).toEqual(expected);  
 })
@@ -75,11 +76,13 @@ test('extract input',()=>{
         </body>
     </html>`;
     const actual = extract_text(inputHTMLBody);
+    console.log(actual)
     const expected = {
         "text": ["Ein Absatz.", "Kleine Schrift."],
         "headlines": ['Überschrift'],
         "title": ['Testseite'],
-        "lists": []
+        "lists": [],
+        "links":[]
     };
     expect(actual).toEqual(expected);  
 })

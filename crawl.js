@@ -135,13 +135,13 @@ function extract_text(htmlBody){
 
     //extracting inner value and adding it to the content object
     for(e of textelements){
-        content["text"].push(e.innerText);
+        content["text"].push(e.innerHTML);
     }
     for(e of headlines){
-        content["headlines"].push(e.innerText);
+        content["headlines"].push(e.innerHTML);
     }
     for(e of lists){
-        content["lists"].push(e.innerText);
+        content["lists"].push(e.innerHTML);
     }
     for(e of title){
         content["title"].push(e.innerHTML);
