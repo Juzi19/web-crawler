@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "jsdom": "^26.0.0",
+    "openai": "^4.87.3",
     "puppeteer": "^24.3.0"
   }
 }
