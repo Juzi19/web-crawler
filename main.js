@@ -1,5 +1,6 @@
 const {crawlPage} = require('./crawl.js')
 const {printReport, printContactData} = require('./report.js')
+const { summarize_report } = require('./summarize.js')
 
 async function main(){
     if(process.argv.length<4){
@@ -27,6 +28,10 @@ async function main(){
         console.log("============================")
         console.log("=== END OF PAGES DETAILS ===")
         console.log("============================")
+    }
+    else if(mode=="intelligent"){
+        const response = await summarize_report(report, pages)
+        console.log(response)
     }
     else if(mode == "links"){
         printReport(pages);
