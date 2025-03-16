@@ -8,16 +8,45 @@ const api_key = process.env.OPEN_AI;
 async function summarize_report(report, pages){
     const contact_links = printContactData(pages)
     const client = new OpenAI({apiKey:api_key})
-    const response = await client.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          { role: "system", content: "Gib deine Antwort IMMER als JSON-Objekt mit folgendem Schema zurück: {'linking_structure': 'Kurzer Überblick über die Link Struktur (ca. 30 Wörter) mit kurzer Erklärung', 'content': 'Überblick über Website Inhalt (70 Wörter)'}, 'contact': 40 Wörter die Kontaktwege erklären" },
-          // es wird nur der Text der Website als input übergeben
-          { role: "user", content: `Link Struktur: ${pages}; Website Inhalt: ${ report[0][1].text}, Kontakt: ${contact_links}`},
+    const response = await client.responses.create({
+        model: "gpt-4o-mini",
+        input: [{ 
+            role: "system",
+            content: "Erstelle eine kurze Erklärung über den Inhalt der Website (ca.70 Wörter), 30 wörter zu der linking structure und 30 Wörter zu den Kontaktmöglichkeiten"
+        },
+          // es wird nur der Text der Website (Homepage) als input übergeben
+        { 
+            role: "user", 
+            content: `Link Struktur: ${pages}; Website Inhalt: ${ report[0][1].text}, Kontakt: ${contact_links}`
+        },
         ],
-        max_tokens: 800
+        text: {
+            format: {
+                type: "json_schema",
+                name: "website_report",
+                schema: {
+                    type: "object",
+                    properties: {
+                        linking_structure: {
+                            type: "string"
+                        },
+                        content: {
+                            type: "string"
+                        },
+                        contact: {
+                            type: "string"
+                        }
+                    },
+                    required: ["linking_structure", "content", "contact"],
+                    additionalProperties: false
+                }
+            }
+        },
+        max_output_tokens: 500
       });
-      return response.choices[0].message.content;
+
+
+    return JSON.parse(response.output_text);
       
 }
 
