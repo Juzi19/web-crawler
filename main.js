@@ -1,6 +1,9 @@
 const {crawlPage} = require('./crawl.js')
 const {printReport, printContactData} = require('./report.js')
 const { summarize_report } = require('./summarize.js')
+require('dotenv').config();
+const api_key = process.env.OPEN_AI;
+
 
 async function main(){
     if(process.argv.length<4){
@@ -30,7 +33,7 @@ async function main(){
         console.log("============================")
     }
     else if(mode=="intelligent"){
-        const response = await summarize_report(report, pages)
+        const response = await summarize_report(report, pages, api_key)
         console.log(response)
     }
     else if(mode == "links"){

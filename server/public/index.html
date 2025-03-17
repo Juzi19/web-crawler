@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Ultimate webscraping - 🔧</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    </head>
+    <body class="h-full flex flex-col">
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <header class="flex w-full p-4 px-2 h-fit bg-green-500">
+            <h1 class="text-2xl text-gray-100 font-bold">Webscrapio 🤖</h1>
+        </header>
+        <main class="relative flex w-full h-full justify-center flex-col">
+            <h2 class="p-2 flex font-bold text-xl w-full">Extract contact information and the page's structure from your favorite websites quickly</h2>
+            <h3 class="px-2 text-l">Smart website reports with our new AI features ✨</h3>
+            <div class="flex w-full my-6 justify-center h-fit items-center mt-10">
+                <form id="form" class="bg-blue-200 p-6 rounded-xl flex flex-col w-1/4">
+                    <label for="link" class="pb-1">Homepage Link:</label>
+                    <input type="text" name="link" id="link" class="rounded p-1 bg-white" required>
+                    <label for="mode" class="py-1">Mode:</label>
+                    <select name="mode" id="mode" aria-placeholder="select an option" class="bg-white rounded p-1">
+                        <option value="intelligent">AI summary</option>
+                        <option value="contact">Contact information</option>
+                        <option value="structure">Structure and links</option>
+                        <option value="report">Full report</option>
+                    </select>
+                    <label for="gpt-key" id="l-gpt-key" class="py-1" style="display: block;">OpenAI-apiKey:</label>
+                    <input type="text" name="gpt-key" id="gpt-key" style="display: block;" class="rounded p-1 bg-white">
+                    <small class="py-1">Only enter URLs that allow scraping! We'll hold you responsible for that!</small>
+                    <div class="flex w-full justify-center">
+                        <input type="submit" value="Let's scrape" class="mt-4 w-1/2 p-2 rounded-xl hover:opacity-80 bg-blue-500 text-white font-bold">
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <footer class="absolute flex w-full p-4 px-2 h-fit bg-green-500 mt-auto bottom-0 justify-center">
+            <a href="./imprint.html" class="font-bold text-white hover:text-gray-200">Imprint</a>
+        </footer>
+        
+        <script src="./code.js" async defer></script>
+    </body>
+</html>
