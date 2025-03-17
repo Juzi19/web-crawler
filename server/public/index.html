@@ -7,7 +7,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Ultimate webscraping - 🔧</title>
+        <title>🔧 Ultimate webscraping</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
@@ -24,8 +24,9 @@
         <main class="relative flex w-full h-full justify-center flex-col">
             <h2 class="p-2 flex font-bold text-xl w-full">Extract contact information and the page's structure from your favorite websites quickly</h2>
             <h3 class="px-2 text-l">Smart website reports with our new AI features ✨</h3>
-            <div class="flex w-full my-6 justify-center h-fit items-center mt-10">
-                <form id="form" class="bg-blue-200 p-6 rounded-xl flex flex-col w-1/4">
+            <div class="relative flex w-full my-6 justify-center h-fit items-center mt-10">
+                <!--Input form for the scraping details-->
+                <form id="form" class="absolute top-1/4 bg-blue-200 p-6 rounded-xl flex flex-col w-1/4">
                     <label for="link" class="pb-1">Homepage Link:</label>
                     <input type="text" name="link" id="link" class="rounded p-1 bg-white" required>
                     <label for="mode" class="py-1">Mode:</label>
@@ -42,6 +43,18 @@
                         <input type="submit" value="Let's scrape" class="mt-4 w-1/2 p-2 rounded-xl hover:opacity-80 bg-blue-500 text-white font-bold">
                     </div>
                 </form>
+                <!--Scraping progress animation-->
+                <div class="absolute top-1/4 w-24 h-24 mt-4">
+                    <!-- Background Circle -->
+                    <svg class="w-full h-full" viewBox="0 0 100 100">
+                        <circle class="text-gray-200" stroke-width="10" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
+                        <!-- Progress Circle -->
+                        <circle id="progress-circle" class="text-blue-500 transition-all duration-300" stroke-width="10" stroke="currentColor" fill="transparent"
+                            r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round"/>
+                    </svg>
+                    <h4 id="progress-text"></h4>
+                </div>
+
             </div>
         </main>
 

@@ -5,7 +5,7 @@ const WebSocket = require('ws');
 const path = require('path');
 
 //import helper methods
-const {crawlPage} = require('../crawl.js')
+const { startCrawl} = require('../crawl.js')
 const { summarize_report } = require('../summarize.js')
 const { printContactData } = require('../report.js');
 
@@ -20,11 +20,14 @@ async function handleMessage(mess, ws){
     try{
         const message = JSON.parse(mess);
         //sends a message to confirm request
-        ws.send(JSON.stringify('{"status": "processing"}'));
+        ws.send(JSON.stringify({"status": "processing"}));
         console.log(message.option)
         //scrapes the webpage
-        const [pages, report] = await crawlPage(message.link, message.link, {}, []);
-        console.log("Moving to the next step")
+        const [pages, report] = await startCrawl(message.link, message.link, {}, []);
+        ws.send(JSON.stringify({"status": "summary"}));
+        console.log("Moving to the next step");
+
+        //chooses the right response based on the user input
         if(message.option=="intelligent"){
             const final_report = await summarize_report(report, pages, message.gptkey);
             ws.send(JSON.stringify({
@@ -46,7 +49,7 @@ async function handleMessage(mess, ws){
                 }))
         }
         else if(message.option=="report"){
-            console.log("Creating a summary")
+            //Calls OpenAI API to create a summary
             const summary = await summarize_report(report, pages, message.gptkey);
             const contact = printContactData(pages);
             const final_report = {
@@ -67,6 +70,7 @@ async function handleMessage(mess, ws){
     }
     catch(error){
         //normal messages
+        console.log("Possible non json object - possible error in handleMessage")
     }
         
 

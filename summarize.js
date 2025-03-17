@@ -50,6 +50,7 @@ async function summarize_report(report, pages, api_key){
         return JSON.parse(response.output_text);
     }
     catch(error){
+        console.log(error)
         return JSON.parse('{"linking_structure": "api key not valid", "content":"please enter a valid api key", "contact":"get an openai key on their website"}')
     }
       
