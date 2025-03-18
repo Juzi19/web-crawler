@@ -19,7 +19,7 @@
         <![endif]-->
 
         <header class="flex w-full p-4 px-2 h-fit bg-green-500">
-            <h1 class="text-2xl text-gray-100 font-bold">Webscrapio 🤖</h1>
+            <h1 class="text-2xl text-gray-100 font-bold"><a href="/server/public/index.html">Webscrapio 🤖</a></h1>
         </header>
         <main class="relative flex w-full h-full justify-center flex-col">
             <h2 class="p-2 flex font-bold text-xl w-full">Extract contact information and the page's structure from your favorite websites quickly</h2>
@@ -44,7 +44,7 @@
                     </div>
                 </form>
                 <!--Scraping progress animation-->
-                <div class="absolute top-1/4 w-24 h-24 mt-4">
+                <div id="scraping-progress" class="absolute top-1/4 w-24 h-24 mt-4" style="display: none;">
                     <!-- Background Circle -->
                     <svg class="w-full h-full" viewBox="0 0 100 100">
                         <circle class="text-gray-200" stroke-width="10" stroke="currentColor" fill="transparent" r="40" cx="50" cy="50"/>
@@ -52,7 +52,14 @@
                         <circle id="progress-circle" class="text-blue-500 transition-all duration-300" stroke-width="10" stroke="currentColor" fill="transparent"
                             r="40" cx="50" cy="50" stroke-dasharray="251.2" stroke-dashoffset="251.2" stroke-linecap="round"/>
                     </svg>
-                    <h4 id="progress-text"></h4>
+                    <h4 id="progress-text" class="text-center"></h4>
+                </div>
+                <!--Displaying the results-->
+                <div id="results_box" style="display: none;" class="py-2">
+                    <!--Scraping mode-->
+                    <h2 id="scraping_mode" class="text-center font-bold my-1"></h2>
+                    <!--Data-->
+                    <div id="scraping_results" class="w-full flex px-2 flex-col items-center text-center"></div>
                 </div>
 
             </div>

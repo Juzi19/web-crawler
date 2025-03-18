@@ -32,6 +32,7 @@ async function handleMessage(mess, ws){
             const final_report = await summarize_report(report, pages, message.gptkey);
             ws.send(JSON.stringify({
                 "status": "done",
+                "mode": "intelligent",
                 "report": final_report
                 }))
         }
@@ -39,12 +40,14 @@ async function handleMessage(mess, ws){
             const contact = printContactData(pages);
             ws.send(JSON.stringify({
                 "status": "done",
+                "mode": "contact",
                 "report": contact
                 }))
         }
         else if(message.option=="structure"){
             ws.send(JSON.stringify({
                 "status": "done",
+                "mode": "structure",
                 "report": pages
                 }))
         }
@@ -59,6 +62,7 @@ async function handleMessage(mess, ws){
             }
             ws.send(JSON.stringify({
                 "status": "done",
+                "mode": "report",
                 "report": final_report
                 }))
         }

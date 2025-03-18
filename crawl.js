@@ -2,9 +2,10 @@ const {JSDOM} = require('jsdom');
 const puppeteer = require('puppeteer');
 
 //max 50 pages to prevent from infinite crawling
-const max_crawled_pages = 2;
+const max_crawled_pages = 1;
 let crawled_pages = 0;
 async function startCrawl(baseURL, currentURL, pages, content) {
+    //reseting counter
     crawled_pages = 0;
     return await crawlPage(baseURL, currentURL, pages, content)
 }
