@@ -12,20 +12,22 @@ const scraping_results = document.getElementById("scraping_results");
 
 socket.addEventListener('open', function (event) {
     console.log('Connected to the WebSocket server');
-    socket.send('Hello Server!');
+    //socket.send('Hello Server!');
 });
 
 socket.addEventListener('message', function (event) {
     checkmessage(event.data)
-    console.log('Message from server ', event.data);
+    //console.log('Message from server ', event.data);
 });
 
 socket.addEventListener('close', function (event) {
     console.log('Disconnected from the WebSocket server');
+    window.alert("Connection issues, please reload the page");
 });
 
 socket.addEventListener('error', function (event) {
     console.error('WebSocket error: ', event);
+    window.alert("Connection issues, please contact support");
 });
 
 function display_text(object){
@@ -37,7 +39,7 @@ function display_text(object){
             break;
         case "contact":
             //checks for contact info
-            if(object.report.contact==[]){
+            if(object.report.contact.length == 0){
                 html = html + 'No contact data found!'
             }
             //creates a list
@@ -74,7 +76,6 @@ function display_text(object){
             Html = Html + '</ul>';
             scraping_results.innerHTML =Html;
             break;
-
     }
 }
 
