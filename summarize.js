@@ -14,7 +14,7 @@ async function summarize_report(report, pages, api_key){
             model: "gpt-4o-mini",
             input: [{ 
                 role: "system",
-                content: "Erstelle eine kurze Erklärung über den Inhalt der Website (ca.70 Wörter), 30 wörter zu der linking structure und 30 Wörter zu den Kontaktmöglichkeiten"
+                content: "Erstelle eine kurze Erklärung über den Inhalt der Website (ca.70 Wörter), 30 wörter zu der linking structure und 30 Wörter zu den Kontaktmöglichkeiten. Formuliere den Inhalt der Website aus Sich eines Dritten."
             },
             // es wird nur der Text der Website (Homepage) als input übergeben
             { 
